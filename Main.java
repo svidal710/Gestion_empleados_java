@@ -1,11 +1,10 @@
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        ArrayList<Empleado> empleados = new ArrayList<>();
+        GestionEmpleados gestion = new GestionEmpleados();
         Scanner scanner = new Scanner(System.in);
 
         int opcion;
@@ -40,7 +39,7 @@ public class Main {
                     System.out.print("ID: ");
                     int id = scanner.nextInt();
 
-                    if (buscarPorId(empleados, id) != null) {
+                    if (gestion.buscarPorId(id) != null) {
 
                         System.out.println("Error: ya existe un empleado con ese ID.");
                         break;
@@ -81,7 +80,7 @@ public class Main {
                     }
 
                     if (nuevoEmpleado != null) {
-                        empleados.add(nuevoEmpleado);
+                        gestion.agregarEmpleado(nuevoEmpleado);
                         System.out.println("Empleado registrado correctamente.");
                     }
 
@@ -95,12 +94,8 @@ public class Main {
                         System.out.println("No hay empleados registrados.");
                     } else {
 
-                        for (Empleado empleado : empleados) {
-
-                            System.out.println("------------------------");
-                            System.out.println("Nombre: " + empleado.getNombre());
-                            System.out.println("ID: " + empleado.getId());
-                            System.out.println("Salario: " + empleado.calcularSalario());
+                        for (Empleado empleado : gestion.obtenerEmpleados()) {
+                            System.out.println(empleado);
                         }
                     }
 
@@ -113,23 +108,15 @@ public class Main {
                     System.out.print("Ingrese el ID del empleado: ");
                     int idBuscado = scanner.nextInt();
 
-                    boolean encontrado = false;
+                    Empleado empleado = gestion.buscarPorId(idBuscado);
 
-                    for (Empleado empleado : empleados) {
-
-                        if (empleado.getId() == idBuscado) {
-
-                            System.out.println("\nEmpleado encontrado:");
-                            System.out.println("Nombre: " + empleado.getNombre());
-                            System.out.println("ID: " + empleado.getId());
-                            System.out.println("Salario: " + empleado.calcularSalario());
-
-                            encontrado = true;
-                            break;
-                        }
-                    }
-
-                    if (!encontrado) {
+                    if (empleado != null) {
+                    
+                        System.out.println("\nEmpleado encontrado:");
+                        System.out.println(empleado);
+                    
+                    } else {
+                    
                         System.out.println("No se encontró un empleado con ese ID.");
                     }
 
@@ -143,7 +130,7 @@ public class Main {
                     int idEditar = scanner.nextInt();
                     scanner.nextLine();
 
-                    Empleado empleadoEditar = buscarPorId(empleados, idEditar);
+                    Empleado empleadoEditar = gestion.buscarPorId(idEditar);
 
                     if (empleadoEditar != null) {
 
@@ -173,16 +160,12 @@ public class Main {
                     System.out.print("Ingrese el ID del empleado: ");
                     int idEliminar = scanner.nextInt();
 
-                    Empleado empleadoEliminar = buscarPorId(empleados, idEliminar);
-
-                    if (empleadoEliminar != null) {
-
-                        empleados.remove(empleadoEliminar);
+                    if (gestion.eliminarEmpleado(idEliminar)) {
 
                         System.out.println("Empleado eliminado correctamente.");
-
+                    
                     } else {
-
+                    
                         System.out.println("No se encontró un empleado con ese ID.");
                     }
 
@@ -244,17 +227,5 @@ public class Main {
                 persona.calcularBonificacion()
             );
         }
-    }
-
-    public static Empleado buscarPorId(ArrayList<Empleado> empleados, int id) {
-
-        for (Empleado empleado : empleados) {
-
-            if (empleado.getId() == id) {
-                return empleado;
-            }
-        }
-
-        return null;
     }
 }
